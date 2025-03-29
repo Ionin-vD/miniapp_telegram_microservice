@@ -1,0 +1,68 @@
+version: "3.8"
+services:
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    depends_on:
+      - api
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://api_db:5432/api_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - api_db
+      - internal
+
+  internal:
+    build:
+      context: ./internal
+      dockerfile: Dockerfile
+    container_name: internal
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://internal_db:5432/internal_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - internal_db
+
+  api_db:
+    image: postgres:13
+    container_name: api_db
+    environment:
+      - POSTGRES_DB=api_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - api_db_data:/var/lib/postgresql/data
+
+  internal_db:
+    image: postgres:13
+    container_name: internal_db
+    environment:
+      - POSTGRES_DB=internal_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - internal_db_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs
+    ports:
+      - "444:443"
+    depends_on:
+      - gateway
+
+volumes:
+  api_db_data:
+  internal_db_data:
