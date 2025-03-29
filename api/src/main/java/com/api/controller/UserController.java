@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class NameController {
+public class UserController {
 
     @GetMapping("/save")
     public ResponseEntity<String> saveName() {
