@@ -21,6 +21,11 @@ spring:
           predicates:
             - Path=/api/mini_app/get_all_user
 
+        - id: route-check_auth
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/check_auth
+
         - id: route-save_internal
           uri: ${URI_INTERNAL}
           predicates:
