@@ -23,6 +23,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/check_auth")
+    public ResponseEntity<?> checkAuthUser(@RequestBody ChatIdRequest request) {
+        try {
+            if (request.getChat_id() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            Optional<User> userOptional = userService.findByChatId(request.getChat_id());
+            if (userOptional.isPresent()) {
+                UserDto user = new UserDto(
+                        userOptional.get().getId(),
+                        userOptional.get().getChatId(),
+                        userOptional.get().getFio(),
+                        userOptional.get().isAdmin(),
+                        userOptional.get().isAuth());
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", user.getId());
+                response.put("fio", user.getFio());
+                response.put("isAdmin", user.isAdmin());
+                response.put("isAuth", user.isAuth());
+
+                if (user.isAuth()) {
+                    return ResponseEntity.ok(response);
+                } else {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("user null");
+                }
+
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("user null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всех пользователей: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
     @GetMapping("/get_all_user")
     public ResponseEntity<?> getAllUsers() {
         try {
