@@ -47,11 +47,11 @@ public class UserController {
                 if (user.isAuth()) {
                     return ResponseEntity.ok(response);
                 } else {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("user null");
+                    return ResponseEntity.ok("users auth false");
                 }
 
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("user null");
+                return ResponseEntity.ok("users null");
             }
         } catch (Exception e) {
             System.err.println("Ошибка при получение всех пользователей: " + e.getMessage());
@@ -76,7 +76,7 @@ public class UserController {
 
                 return ResponseEntity.ok(userDtos);
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("users null");
+                return ResponseEntity.ok("users null");
             }
         } catch (Exception e) {
             System.err.println("Ошибка при получение всех пользователей: " + e.getMessage());
