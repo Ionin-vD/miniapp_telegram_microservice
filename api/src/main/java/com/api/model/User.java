@@ -24,8 +24,11 @@ public class User {
     @Column(nullable = false)
     private String fio;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isAdmin = false;
+    @Column(columnDefinition = "boolean default false")
     private boolean isAuth = false;
+    @Column(columnDefinition = "boolean default false")
     private boolean isDeleted = false;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
@@ -42,6 +45,14 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Progress> progress;
+
+    public User() {
+    }
+
+    public User(Long chat_id, String fio2) {
+        this.chatId = chat_id;
+        this.fio = fio2;
+    }
 
     public Long getId() {
         return id;

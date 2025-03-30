@@ -1,15 +1,23 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: gateway
   cloud:
     gateway:
       routes:
-        - id: route-save
-          uri: http://api:8080
+        - id: route-find_user_by_chat_id
+          uri: ${URI_API}
           predicates:
-            - Path=/api/save
+            - Path=/api/mini_app/find_user_by_chat_id
+
+        - id: route-create_user
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/create_user
+
         - id: route-save_internal
-          uri: http://internal:8081
+          uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/save_internal
     discovery:
@@ -27,6 +35,13 @@ management:
     web:
       exposure:
         include: health,info,gateway
+
 # logging:
 #   level:
 #     org.springframework.cloud.gateway: DEBUG
+
+bot:
+  name: ${BOT_NAME}
+  token: ${BOT_TOKEN}
+
+chat_id: ${CHAT_ID}
