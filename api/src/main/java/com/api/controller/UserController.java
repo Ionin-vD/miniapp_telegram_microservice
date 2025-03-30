@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.api.dto.ChatIdRequest;
 import com.api.dto.CreateUserRequest;
+import com.api.dto.UserDto;
 import com.api.model.User;
 import com.api.service.UserService;
 
@@ -20,6 +22,31 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/get_all_user")
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            List<User> users = userService.findAll();
+            if (!users.isEmpty()) {
+                List<UserDto> userDtos = users.stream()
+                        .map(user -> new UserDto(
+                                user.getId(),
+                                user.getChatId(),
+                                user.getFio(),
+                                user.isAdmin(),
+                                user.isAuth()))
+                        .toList();
+
+                return ResponseEntity.ok(userDtos);
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("users null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всех пользователей: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
 
     @PostMapping("/find_user_by_chat_id")
     public ResponseEntity<?> findUserByChatId(@RequestBody ChatIdRequest request) {
