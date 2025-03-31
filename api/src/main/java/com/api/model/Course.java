@@ -36,9 +36,6 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<ThemeOfCourse> themes;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Schedule> schedule;
-
     public Long getId() {
         return id;
     }
@@ -86,13 +83,4 @@ public class Course {
     public void setThemes(List<ThemeOfCourse> themes) {
         this.themes = themes;
     }
-
-    public List<Schedule> getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(List<Schedule> schedule) {
-        this.schedule = schedule;
-    }
-
 }

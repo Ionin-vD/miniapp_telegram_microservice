@@ -41,9 +41,6 @@ public class User {
     private List<FeedbackOfCourse> feedbacks;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Schedule> schedule;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Progress> progress;
 
     public User() {
@@ -125,14 +122,6 @@ public class User {
 
     public void setFeedbacks(List<FeedbackOfCourse> feedbacks) {
         this.feedbacks = feedbacks;
-    }
-
-    public List<Schedule> getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(List<Schedule> schedule) {
-        this.schedule = schedule;
     }
 
     public List<Progress> getProgress() {

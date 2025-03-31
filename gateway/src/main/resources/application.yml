@@ -35,11 +35,23 @@ spring:
           uri: ${URI_API}
           predicates:
             - Path=/api/mini_app/check_auth
-
-        - id: route-save_internal
+        #------------------------------------------------------------------------
+        - id: route-get_all_schedule
           uri: ${URI_INTERNAL}
           predicates:
-            - Path=/api/save_internal
+            - Path=/api/mini_app/get_all_schedule
+        - id: route-get_all_free_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/get_all_free_schedule
+        - id: route-add_free_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/add_free_schedule
+        - id: route-add_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/add_schedule
     discovery:
       locator:
         enabled: true

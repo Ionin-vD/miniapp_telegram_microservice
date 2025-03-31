@@ -18,7 +18,6 @@ import com.api.service.UserService;
 @RestController
 @RequestMapping("/api/mini_app")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
