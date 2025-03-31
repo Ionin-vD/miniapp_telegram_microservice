@@ -6,6 +6,41 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: route-add_user_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/add_user_in_course
+
+        - id: route-add_theme_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/add_theme_in_course
+
+        - id: route-update_title_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/update_title_course
+
+        - id: route-add_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/add_course
+
+        - id: route-get_all_users_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_all_users_in_course
+
+        - id: route-get_all_themes_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_all_themes_in_course
+
+        - id: route-get_all_courses
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_all_courses
+
         - id: route-update_user
           uri: ${URI_API}
           predicates:
@@ -40,26 +75,32 @@ spring:
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/get_all_schedule
+
         - id: route-get_all_free_schedule
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/get_all_free_schedule
+
         - id: route-add_free_schedule
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/add_free_schedule
+
         - id: route-add_schedule
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/add_schedule
+
         - id: route-get_all_schedule_is_course
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/get_all_schedule_is_course
+
         - id: route-delete_schedule
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/delete_schedule
+
         - id: route-add_user_schedule
           uri: ${URI_INTERNAL}
           predicates:

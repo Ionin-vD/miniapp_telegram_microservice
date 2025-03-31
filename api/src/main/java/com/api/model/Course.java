@@ -36,6 +36,14 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<ThemeOfCourse> themes;
 
+    public Course() {
+    }
+
+    public Course(User admin2, String title2) {
+        this.admin = admin2;
+        this.title = title2;
+    }
+
     public Long getId() {
         return id;
     }

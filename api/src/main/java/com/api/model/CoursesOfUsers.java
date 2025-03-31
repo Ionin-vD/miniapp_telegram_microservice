@@ -25,8 +25,16 @@ public class CoursesOfUsers {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "auth_in_course")
+    @Column(name = "auth_in_course", columnDefinition = "boolean default false")
     private boolean authInCourse = false;
+
+    public CoursesOfUsers() {
+    }
+
+    public CoursesOfUsers(User user, Course course) {
+        this.user = user;
+        this.course = course;
+    }
 
     public Long getId() {
         return id;

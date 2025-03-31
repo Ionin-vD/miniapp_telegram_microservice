@@ -34,6 +34,14 @@ public class ThemeOfCourse {
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL)
     private List<Progress> progress;
 
+    public ThemeOfCourse() {
+    }
+
+    public ThemeOfCourse(String title, Course course) {
+        this.title = title;
+        this.course = course;
+    }
+
     public Long getId() {
         return id;
     }
