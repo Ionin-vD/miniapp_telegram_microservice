@@ -25,4 +25,8 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAllByIdNot(1L);
     }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 }

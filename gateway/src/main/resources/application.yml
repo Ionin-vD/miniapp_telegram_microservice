@@ -6,6 +6,11 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: route-update_user
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/update_user
+
         - id: route-find_user_by_chat_id
           uri: ${URI_API}
           predicates:
@@ -16,10 +21,15 @@ spring:
           predicates:
             - Path=/api/mini_app/create_user
 
-        - id: route-create_user
+        - id: route-get_all_user
           uri: ${URI_API}
           predicates:
             - Path=/api/mini_app/get_all_user
+
+        - id: route-get_all_user_is_delete
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_all_user_is_delete
 
         - id: route-check_auth
           uri: ${URI_API}

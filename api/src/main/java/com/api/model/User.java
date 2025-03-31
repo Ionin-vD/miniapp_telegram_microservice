@@ -49,9 +49,10 @@ public class User {
     public User() {
     }
 
-    public User(Long chat_id, String fio2) {
+    public User(Long chat_id, String fio2, boolean auth) {
         this.chatId = chat_id;
         this.fio = fio2;
+        this.isAuth = auth;
     }
 
     public Long getId() {
