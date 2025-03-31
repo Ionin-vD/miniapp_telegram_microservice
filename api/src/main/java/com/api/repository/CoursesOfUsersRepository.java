@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.api.model.Course;
 import com.api.model.CoursesOfUsers;
 
 public interface CoursesOfUsersRepository extends JpaRepository<CoursesOfUsers, Long> {
@@ -13,4 +12,5 @@ public interface CoursesOfUsersRepository extends JpaRepository<CoursesOfUsers, 
     List<CoursesOfUsers> findByCourseId(Long course_id);
 
     Optional<CoursesOfUsers> findByCourseIdAndUserId(Long usedId, Long courseId);
+
 }

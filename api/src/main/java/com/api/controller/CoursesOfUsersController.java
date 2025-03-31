@@ -30,6 +30,45 @@ public class CoursesOfUsersController {
     @Autowired
     private CourseService courseService;
 
+    @PostMapping("/change_auth_user_in_course")
+    public ResponseEntity<?> changeAuthUserInCourse(@RequestBody CoursesOfUsersDto request) {
+        try {
+            if (request.getCourseId() == null || request.getUserId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+
+            Optional<User> userOptional = userService.findById(request.getUserId());
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь не найден");
+            }
+
+            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
+            if (courseOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Курс не найден");
+            }
+
+            Optional<CoursesOfUsers> existingOpt = coursesOfUsersService.findOne(request.getUserId(),
+                    request.getCourseId());
+            if (existingOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Запись не найдена");
+            }
+            CoursesOfUsers entity = existingOpt.get();
+            entity.setAuthInCourse(!entity.isAuthInCourse());
+            CoursesOfUsers saved = coursesOfUsersService.save(entity);
+
+            CoursesOfUsersDto response = new CoursesOfUsersDto(
+                    saved.getId(),
+                    saved.getUser().getId(),
+                    saved.getCourse().getId(),
+                    saved.isAuthInCourse());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Ошибка при изменение аутентификации: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
+        }
+    }
+
     @PostMapping("/get_all_users_in_course")
     public ResponseEntity<?> getAllUserInCourses(@RequestBody CourseIdRequest request) {
         try {

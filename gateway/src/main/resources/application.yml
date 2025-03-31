@@ -6,6 +6,16 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: route-change_auth_user_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/change_auth_user_in_course
+
+        - id: route-update_theme_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/update_theme_in_course
+
         - id: route-add_user_in_course
           uri: ${URI_API}
           predicates:

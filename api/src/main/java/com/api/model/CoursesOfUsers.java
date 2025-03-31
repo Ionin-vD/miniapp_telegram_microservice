@@ -36,6 +36,12 @@ public class CoursesOfUsers {
         this.course = course;
     }
 
+    public CoursesOfUsers(User user, Course course, boolean authInCourse) {
+        this.user = user;
+        this.course = course;
+        this.authInCourse = authInCourse;
+    }
+
     public Long getId() {
         return id;
     }

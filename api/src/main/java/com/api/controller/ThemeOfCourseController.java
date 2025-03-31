@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.CourseIdRequest;
-import com.api.dto.CoursesOfUsersDto;
 import com.api.dto.ThemeOfCourseDto;
 import com.api.model.Course;
-import com.api.model.CoursesOfUsers;
 import com.api.model.ThemeOfCourse;
-import com.api.model.User;
 import com.api.service.CourseService;
 import com.api.service.ThemeOfCourseService;
 
@@ -28,6 +25,32 @@ public class ThemeOfCourseController {
     private ThemeOfCourseService themeOfCourseService;
     @Autowired
     private CourseService courseService;
+
+    @PostMapping("/update_theme_in_course")
+    public ResponseEntity<?> updateThemeInCourse(@RequestBody ThemeOfCourseDto request) {
+        try {
+            if (request.getTitle() == null || request.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            Optional<ThemeOfCourse> themeOfCourseOptional = themeOfCourseService.findById(request.getId());
+            if (themeOfCourseOptional.isPresent()) {
+                ThemeOfCourse theme = themeOfCourseOptional.get();
+                if (request.getTitle() != null) {
+                    theme.setTitle(request.getTitle());
+                }
+
+                themeOfCourseService.updateTheme(theme);
+
+                return ResponseEntity.ok("success");
+            } else {
+                return ResponseEntity.ok("users null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при обновления названия курса: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
 
     @PostMapping("/get_all_themes_in_course")
     public ResponseEntity<?> getAllThemesInCourses(@RequestBody CourseIdRequest request) {

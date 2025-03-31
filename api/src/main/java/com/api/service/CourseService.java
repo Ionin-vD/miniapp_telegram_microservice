@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.model.Course;
+import com.api.model.ThemeOfCourse;
 import com.api.model.User;
 import com.api.repository.CourseRepository;
 

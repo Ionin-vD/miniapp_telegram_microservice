@@ -30,4 +30,12 @@ public class ThemeOfCourseService {
         return themeOfCourseRepository.save(entity);
     }
 
+    public Optional<ThemeOfCourse> findById(Long id) {
+        return themeOfCourseRepository.findById(id);
+    }
+
+    public ThemeOfCourse updateTheme(ThemeOfCourse theme) {
+        return themeOfCourseRepository.save(theme);
+    }
+
 }

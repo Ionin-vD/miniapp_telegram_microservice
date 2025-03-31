@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.model.Course;
 import com.api.model.CoursesOfUsers;
 import com.api.repository.CoursesOfUsersRepository;
 
@@ -25,6 +24,14 @@ public class CoursesOfUsersService {
 
     public Optional<CoursesOfUsers> findOne(Long usedId, Long courseId) {
         return coursesOfUsersRepository.findByCourseIdAndUserId(usedId, courseId);
+    }
+
+    public Optional<CoursesOfUsers> findById(Long id) {
+        return coursesOfUsersRepository.findById(id);
+    }
+
+    public CoursesOfUsers update(CoursesOfUsers coursesOfUsers) {
+        return coursesOfUsersRepository.save(coursesOfUsers);
     }
 
 }
