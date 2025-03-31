@@ -21,19 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.internal.dto.ScheduleDto;
 import com.internal.dto.ScheduleRangeRequest;
-import com.internal.dto.SelectedScheduleRequest;
 import com.internal.model.Schedule;
-import com.internal.model.SelectedSchedule;
 import com.internal.service.ScheduleService;
-import com.internal.service.SelectedScheduleService;
 
 @RestController
 @RequestMapping("/api/mini_app")
 public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
-    @Autowired
-    private SelectedScheduleService selectedScheduleService;
 
     @PostMapping("/get_all_schedule_is_course")
     public ResponseEntity<?> getSchedulesByCourse(@RequestBody ScheduleDto request) {
@@ -54,42 +49,20 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/add_user_schedule")
-    public ResponseEntity<?> selectSchedule(@RequestBody SelectedScheduleRequest request) {
-        if (request.getScheduleId() == null || request.getUserId() == null || request.getThemeId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body is null");
-        }
-
-        Optional<SelectedSchedule> exists = selectedScheduleService.findByScheduleId(request.getScheduleId());
-        if (exists.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Это время уже занято");
-        }
-
-        Schedule schedule = scheduleService.findById(request.getScheduleId())
-                .orElseThrow(() -> new RuntimeException("Расписание не найдено"));
-
-        SelectedSchedule selected = new SelectedSchedule();
-        selected.setSchedule(schedule);
-        selected.setUserId(request.getUserId());
-        selected.setThemeId(request.getThemeId());
-
-        SelectedSchedule saved = selectedScheduleService.save(selected);
-        return ResponseEntity.ok(saved);
-    }
-
     @PostMapping("/delete_schedule")
     public ResponseEntity<?> deleteSchedule(@RequestBody ScheduleDto request) {
         if (request.getId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body is null");
         }
 
-        Optional<SelectedSchedule> selected = selectedScheduleService.findByScheduleId(request.getId());
-        if (selected.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Нельзя удалить занятое расписание");
+        try {
+            scheduleService.deleteById(request.getId());
+            return ResponseEntity.ok("Расписание удалено (вместе с выбранными слотами)");
+        } catch (Exception e) {
+            System.err.println("Ошибка при удалении расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при удалении");
         }
-
-        scheduleService.deleteById(request.getId());
-        return ResponseEntity.ok("Расписание удалено");
     }
 
     @PostMapping("/add_schedule")

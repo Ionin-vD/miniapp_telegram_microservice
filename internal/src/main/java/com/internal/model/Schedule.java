@@ -2,12 +2,16 @@ package com.internal.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +29,9 @@ public class Schedule {
 
     @Column(nullable = false)
     private LocalTime time;
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SelectedSchedule> selectedSchedules = new ArrayList<>();
 
     public Schedule() {
     }
@@ -65,6 +72,14 @@ public class Schedule {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public List<SelectedSchedule> getSelectedSchedules() {
+        return selectedSchedules;
+    }
+
+    public void setSelectedSchedules(List<SelectedSchedule> selectedSchedules) {
+        this.selectedSchedules = selectedSchedules;
     }
 
 }

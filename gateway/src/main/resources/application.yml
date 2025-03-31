@@ -52,6 +52,19 @@ spring:
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/add_schedule
+        - id: route-get_all_schedule_is_course
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/get_all_schedule_is_course
+        - id: route-delete_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/delete_schedule
+        - id: route-add_user_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/add_user_schedule
+
     discovery:
       locator:
         enabled: true
