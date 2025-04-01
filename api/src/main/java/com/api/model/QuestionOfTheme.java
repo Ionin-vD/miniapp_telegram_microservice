@@ -23,6 +23,14 @@ public class QuestionOfTheme {
     @JoinColumn(name = "theme_id", nullable = false)
     private ThemeOfCourse theme;
 
+    public QuestionOfTheme() {
+    }
+
+    public QuestionOfTheme(String title, ThemeOfCourse theme) {
+        this.title = title;
+        this.theme = theme;
+    }
+
     public Long getId() {
         return id;
     }

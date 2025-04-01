@@ -13,4 +13,5 @@ public interface CoursesOfUsersRepository extends JpaRepository<CoursesOfUsers, 
 
     Optional<CoursesOfUsers> findByCourseIdAndUserId(Long usedId, Long courseId);
 
+    List<CoursesOfUsers> findAllByUserIdAndAuthInCourse(Long userId, boolean authInCourse);
 }

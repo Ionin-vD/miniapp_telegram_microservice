@@ -38,4 +38,8 @@ public class ThemeOfCourseService {
         return themeOfCourseRepository.save(theme);
     }
 
+    public void delete(ThemeOfCourse theme) {
+        themeOfCourseRepository.delete(theme);
+    }
+
 }

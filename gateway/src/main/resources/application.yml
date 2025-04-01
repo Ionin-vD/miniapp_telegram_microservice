@@ -6,6 +6,56 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: route-get_courses_where_user_auth
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_courses_where_user_auth
+
+        - id: route-get_title_theme_of_id
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_title_theme_of_id
+
+        - id: route-delete_user_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/delete_user_in_course
+
+        - id: route-delete_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/delete_course
+
+        - id: route-add_question_in_theme
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/add_question_in_theme
+
+        - id: route-delete_question
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/delete_question
+
+        - id: route-update_question_in_theme
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/update_question_in_theme
+
+        - id: route-get_all_question_of_theme
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/get_all_question_of_theme
+
+        - id: route-delete_theme
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/delete_theme
+
+        - id: route-check_auth_user_in_course
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/check_auth_user_in_course
+
         - id: route-change_auth_user_in_course
           uri: ${URI_API}
           predicates:

@@ -18,6 +18,10 @@ public class CoursesOfUsersDto {
     private Boolean authInCourse;
     private UserDto user;
 
+    public CoursesOfUsersDto(Boolean authInCourse) {
+        this.authInCourse = authInCourse;
+    }
+
     public CoursesOfUsersDto(Long id, Long usedId, Long courseId, Boolean authInCourse) {
         this.id = id;
         this.userId = usedId;

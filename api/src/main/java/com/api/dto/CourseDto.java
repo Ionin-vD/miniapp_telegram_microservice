@@ -18,6 +18,10 @@ public class CourseDto {
     public CourseDto() {
     }
 
+    public CourseDto(Long id) {
+        this.id = id;
+    }
+
     public CourseDto(Long adminId, String title) {
         this.adminId = adminId;
         this.title = title;

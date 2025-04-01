@@ -23,6 +23,29 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @PostMapping("/delete_course")
+    public ResponseEntity<?> deleteCourse(@RequestBody CourseDto request) {
+        try {
+            if (request.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            Optional<Course> courseOptional = courseService.findById(request.getId());
+            if (courseOptional.isPresent()) {
+                Course course = courseOptional.get();
+
+                courseService.delete(course);
+
+                return ResponseEntity.ok("success");
+            } else {
+                return ResponseEntity.ok("course null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при удалении курса: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
     @GetMapping("/get_all_courses")
     public ResponseEntity<?> getAllCourse() {
         try {

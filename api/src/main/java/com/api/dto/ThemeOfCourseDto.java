@@ -18,6 +18,10 @@ public class ThemeOfCourseDto {
     public ThemeOfCourseDto() {
     }
 
+    public ThemeOfCourseDto(Long id) {
+        this.id = id;
+    }
+
     public ThemeOfCourseDto(Long id, Long courseId, String themeTitle) {
         this.id = id;
         this.title = themeTitle;

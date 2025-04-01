@@ -34,4 +34,11 @@ public class CoursesOfUsersService {
         return coursesOfUsersRepository.save(coursesOfUsers);
     }
 
+    public void delete(CoursesOfUsers user) {
+        coursesOfUsersRepository.delete(user);
+    }
+
+    public List<CoursesOfUsers> findAllByUserIdAndIsAuth(Long id) {
+        return coursesOfUsersRepository.findAllByUserIdAndAuthInCourse(id, true);
+    }
 }

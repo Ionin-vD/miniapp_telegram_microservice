@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.dto.CourseIdRequest;
+import com.api.dto.CourseDto;
 import com.api.dto.ThemeOfCourseDto;
 import com.api.model.Course;
 import com.api.model.ThemeOfCourse;
@@ -25,6 +25,52 @@ public class ThemeOfCourseController {
     private ThemeOfCourseService themeOfCourseService;
     @Autowired
     private CourseService courseService;
+
+    @PostMapping("/get_title_theme_of_id")
+    public ResponseEntity<?> getTitleThemeOfId(@RequestBody ThemeOfCourseDto request) {
+        try {
+            if (request.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            Optional<ThemeOfCourse> themes = themeOfCourseService.findById(request.getId());
+            if (themes.isPresent()) {
+                ThemeOfCourseDto response = new ThemeOfCourseDto(
+                        themes.get().getId(),
+                        themes.get().getCourse().getId(),
+                        themes.get().getTitle());
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.ok("themes null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при получении всех тем по курсу: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
+    @PostMapping("/delete_theme")
+    public ResponseEntity<?> deleteTheme(@RequestBody ThemeOfCourseDto request) {
+        try {
+            if (request.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            Optional<ThemeOfCourse> themeOfCourseOptional = themeOfCourseService.findById(request.getId());
+            if (themeOfCourseOptional.isPresent()) {
+                ThemeOfCourse theme = themeOfCourseOptional.get();
+
+                themeOfCourseService.delete(theme);
+
+                return ResponseEntity.ok("success");
+            } else {
+                return ResponseEntity.ok("users null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при обновления названия курса: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
 
     @PostMapping("/update_theme_in_course")
     public ResponseEntity<?> updateThemeInCourse(@RequestBody ThemeOfCourseDto request) {
@@ -53,10 +99,12 @@ public class ThemeOfCourseController {
     }
 
     @PostMapping("/get_all_themes_in_course")
-    public ResponseEntity<?> getAllThemesInCourses(@RequestBody CourseIdRequest request) {
+    public ResponseEntity<?> getAllThemesInCourses(@RequestBody ThemeOfCourseDto request) {
         try {
-            Long course_id = request.getCourse_id();
-            List<ThemeOfCourse> themes = themeOfCourseService.findByCourseId(course_id);
+            if (request.getCourseId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            List<ThemeOfCourse> themes = themeOfCourseService.findByCourseId(request.getCourseId());
             if (!themes.isEmpty()) {
                 List<ThemeOfCourseDto> dtoList = themes.stream()
                         .map(t -> new ThemeOfCourseDto(
