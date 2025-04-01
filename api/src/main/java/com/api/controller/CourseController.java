@@ -73,11 +73,11 @@ public class CourseController {
     @PostMapping("/add_course")
     public ResponseEntity<?> addCourse(@RequestBody CourseDto request) {
         try {
-            if (request.getAdminId() == null || request.getTitle() == null) {
+            if (request.getId() == null || request.getTitle() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
             }
 
-            Optional<User> userOptional = courseService.findByAdminId(request.getAdminId());
+            Optional<User> userOptional = courseService.findByAdminId(request.getId());
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь не найден");
             }
