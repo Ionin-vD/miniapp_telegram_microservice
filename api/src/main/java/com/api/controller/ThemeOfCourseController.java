@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.dto.CourseDto;
 import com.api.dto.ThemeOfCourseDto;
 import com.api.model.Course;
 import com.api.model.ThemeOfCourse;

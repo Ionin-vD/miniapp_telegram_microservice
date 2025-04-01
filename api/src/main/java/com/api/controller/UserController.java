@@ -183,7 +183,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Пользователь уже существует");
             }
 
-            User user = userService.createUser(new User(request.getChat_id(), request.getFio(), request.getIsAuth()));
+            User user = userService.createUser(new User(request.getChat_id(), request.getFio(), true));
             if (user != null) {
                 return ResponseEntity.ok("success");
             } else {

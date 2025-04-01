@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.CourseDto;
 import com.api.dto.CoursesOfUsersDto;
-import com.api.dto.ThemeOfCourseDto;
 import com.api.model.Course;
 import com.api.model.CoursesOfUsers;
-import com.api.model.ThemeOfCourse;
 import com.api.model.User;
 import com.api.service.CourseService;
 import com.api.service.CoursesOfUsersService;

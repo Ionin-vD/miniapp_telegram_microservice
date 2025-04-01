@@ -110,7 +110,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         CreateUserRequest request = new CreateUserRequest();
         request.setChat_id(chatId);
         request.setFio(fio);
-        request.setAuth(true);
 
         try {
             webClient.post()
