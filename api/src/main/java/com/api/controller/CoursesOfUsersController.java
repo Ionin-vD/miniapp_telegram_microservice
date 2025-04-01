@@ -147,7 +147,7 @@ public class CoursesOfUsersController {
             System.out.println(request.getCourseId());
             Optional<CoursesOfUsers> existingOpt = coursesOfUsersService.findOne(request.getUserId(),
                     request.getCourseId());
-            if (existingOpt.isPresent()) {
+            if (existingOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Запись не найдена");
             }
             CoursesOfUsers entity = existingOpt.get();

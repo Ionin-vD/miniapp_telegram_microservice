@@ -23,7 +23,7 @@ public class CoursesOfUsersService {
     }
 
     public Optional<CoursesOfUsers> findOne(Long usedId, Long courseId) {
-        return coursesOfUsersRepository.findByCourseIdAndUserId(usedId, courseId);
+        return coursesOfUsersRepository.findByCourseIdAndUserId(courseId, usedId);
     }
 
     public Optional<CoursesOfUsers> findById(Long id) {
