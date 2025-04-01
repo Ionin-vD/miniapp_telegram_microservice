@@ -16,12 +16,15 @@ import com.api.dto.CourseDto;
 import com.api.model.Course;
 import com.api.model.User;
 import com.api.service.CourseService;
+import com.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/mini_app")
 public class CourseController {
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/delete_course")
     public ResponseEntity<?> deleteCourse(@RequestBody CourseDto request) {
@@ -73,11 +76,11 @@ public class CourseController {
     @PostMapping("/add_course")
     public ResponseEntity<?> addCourse(@RequestBody CourseDto request) {
         try {
-            if (request.getAdminId() == null || request.getTitle() == null) {
+            if (request.getId() == null || request.getTitle() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
             }
 
-            Optional<User> userOptional = courseService.findByAdminId(request.getAdminId());
+            Optional<User> userOptional = userService.findById(request.getId());
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь не найден");
             }
