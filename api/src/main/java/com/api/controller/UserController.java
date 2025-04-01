@@ -24,10 +24,11 @@ public class UserController {
     @PostMapping("/update_user")
     public ResponseEntity<?> updateUser(@RequestBody UserDto request) {
         try {
-            if (request.getChat_id() == null) {
+            if (request.getId() == null || request.getFio() == null || request.getIsAdmin() == null
+                    || request.getIsAuth() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
             }
-            Optional<User> userOptional = userService.findByChatId(request.getChat_id());
+            Optional<User> userOptional = userService.findById(request.getId());
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 if (request.getFio() != null) {
