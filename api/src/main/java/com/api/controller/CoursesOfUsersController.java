@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.CourseDto;
+import com.api.dto.CourseIdRequest;
 import com.api.dto.CoursesOfUsersDto;
 import com.api.model.Course;
 import com.api.model.CoursesOfUsers;
@@ -166,10 +167,12 @@ public class CoursesOfUsersController {
     }
 
     @PostMapping("/get_all_users_in_course")
-    public ResponseEntity<?> getAllUserInCourses(@RequestBody CourseDto request) {
+    public ResponseEntity<?> getAllUserInCourses(@RequestBody CourseIdRequest request) {
         try {
-            Long course_id = request.getId();
-            List<CoursesOfUsers> themes = coursesOfUsersService.findAllByCourseId(course_id);
+            if (request.getCourse_id() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+            List<CoursesOfUsers> themes = coursesOfUsersService.findAllByCourseId(request.getCourse_id());
             if (!themes.isEmpty()) {
                 List<CoursesOfUsersDto> dtoList = themes.stream()
                         .map(t -> new CoursesOfUsersDto(t.getId(),
