@@ -33,4 +33,8 @@ public class UserService {
     public Optional<User> findById(Long adminId) {
         return userRepository.findById(adminId);
     }
+
+    public List<User> findAllByIds(List<Long> ids) {
+        return userRepository.findAllById(ids);
+    }
 }

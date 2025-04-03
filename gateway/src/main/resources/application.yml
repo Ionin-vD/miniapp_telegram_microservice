@@ -130,7 +130,27 @@ spring:
           uri: ${URI_API}
           predicates:
             - Path=/api/mini_app/check_auth
+
+        - id: route-find_users_fio_by_ids
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/find_users_fio_by_ids
+
+        - id: route-find_themes_title_by_ids
+          uri: ${URI_API}
+          predicates:
+            - Path=/api/mini_app/find_themes_title_by_ids
         #------------------------------------------------------------------------
+
+        - id: route-get_all_course_selected_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/get_all_course_selected_schedule
+        - id: route-get_all_user_selected_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/get_all_user_selected_schedule
+
         - id: route-get_all_schedule
           uri: ${URI_INTERNAL}
           predicates:

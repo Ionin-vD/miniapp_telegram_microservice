@@ -143,8 +143,6 @@ public class CoursesOfUsersController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Курс не найден");
             }
 
-            System.out.println(request.getUserId());
-            System.out.println(request.getCourseId());
             Optional<CoursesOfUsers> existingOpt = coursesOfUsersService.findOne(request.getUserId(),
                     request.getCourseId());
             if (existingOpt.isEmpty()) {

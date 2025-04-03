@@ -42,4 +42,8 @@ public class ThemeOfCourseService {
         themeOfCourseRepository.delete(theme);
     }
 
+    public List<ThemeOfCourse> findAllByIds(List<Long> ids) {
+        return themeOfCourseRepository.findAllById(ids);
+    }
+
 }

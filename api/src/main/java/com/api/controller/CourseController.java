@@ -106,7 +106,7 @@ public class CourseController {
     @PostMapping("/update_title_course")
     public ResponseEntity<?> updateTitleCourse(@RequestBody CourseDto request) {
         try {
-            if (request.getTitle() == null || request.getAdminId() == null) {
+            if (request.getTitle() == null || request.getId() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
             }
             Optional<Course> courseOptional = courseService.findById(request.getId());

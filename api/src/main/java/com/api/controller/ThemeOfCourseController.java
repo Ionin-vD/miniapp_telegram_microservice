@@ -1,7 +1,9 @@
 package com.api.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -155,4 +157,19 @@ public class ThemeOfCourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
         }
     }
+
+    @PostMapping("/find_themes_title_by_ids")
+    public ResponseEntity<?> findThemesTitleByIds(@RequestBody Map<String, List<Long>> request) {
+        List<Long> ids = request.get("ids");
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ids is null");
+        }
+
+        List<ThemeOfCourse> themes = themeOfCourseService.findAllByIds(ids);
+        Map<Long, String> response = themes.stream()
+                .collect(Collectors.toMap(ThemeOfCourse::getId, ThemeOfCourse::getTitle));
+
+        return ResponseEntity.ok(response);
+    }
+
 }

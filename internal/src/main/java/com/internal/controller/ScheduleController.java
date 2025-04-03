@@ -33,7 +33,7 @@ public class ScheduleController {
     @PostMapping("/get_all_schedule_is_course")
     public ResponseEntity<?> getSchedulesByCourse(@RequestBody ScheduleDto request) {
         if (request.getCourse_id() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("course_id is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
         }
 
         List<Schedule> schedules = scheduleService.findByCourseId(request.getCourse_id());
@@ -66,7 +66,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/add_schedule")
-    public ResponseEntity<?> addFreeSchedule(@RequestBody ScheduleRangeRequest request) {
+    public ResponseEntity<?> addSchedule(@RequestBody ScheduleRangeRequest request) {
         try {
             if (request.getCourse_id() == null || request.getDate() == null || request.getTime() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");

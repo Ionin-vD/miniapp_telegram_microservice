@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,11 +79,7 @@ public class UserController {
                 response.put("isAdmin", user.getIsAdmin());
                 response.put("isAuth", user.getIsAuth());
 
-                if (user.getIsAuth()) {
-                    return ResponseEntity.ok(response);
-                } else {
-                    return ResponseEntity.ok("users auth false");
-                }
+                return ResponseEntity.ok(response);
 
             } else {
                 return ResponseEntity.ok("users null");
@@ -194,6 +191,20 @@ public class UserController {
             System.err.println("Ошибка при регистрации пользователя: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
         }
+    }
+
+    @PostMapping("/find_users_fio_by_ids")
+    public ResponseEntity<?> findUsersFioByIds(@RequestBody Map<String, List<Long>> request) {
+        List<Long> ids = request.get("ids");
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ids is null");
+        }
+
+        List<User> users = userService.findAllByIds(ids);
+        Map<Long, String> response = users.stream()
+                .collect(Collectors.toMap(User::getId, User::getFio));
+
+        return ResponseEntity.ok(response);
     }
 
 }

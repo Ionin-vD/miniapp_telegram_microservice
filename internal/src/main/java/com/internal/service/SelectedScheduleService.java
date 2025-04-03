@@ -22,7 +22,19 @@ public class SelectedScheduleService {
         return selectedScheduleRepository.save(request);
     }
 
-    public Optional<SelectedSchedule> findByScheduleId(Long id) {
+    public List<SelectedSchedule> findByScheduleId(Long id) {
         return selectedScheduleRepository.findBySchedule_Id(id);
+    }
+
+    public void deleteById(Long scheduleId) {
+        selectedScheduleRepository.deleteById(scheduleId);
+    }
+
+    public List<SelectedSchedule> findAllByUserId(Long userId) {
+        return selectedScheduleRepository.findAllByUserId(userId);
+    }
+
+    public List<SelectedSchedule> findByScheduleIdIn(List<Long> scheduleIds) {
+        return selectedScheduleRepository.findByScheduleIdIn(scheduleIds);
     }
 }
