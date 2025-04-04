@@ -49,7 +49,7 @@ public class SelectedScheduleController {
             List<Schedule> scheduleList = scheduleService.findByCourseIdAndDateBetween(request.getCourse_id(), monday,
                     sunday);
             if (scheduleList.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("schedules not found for course");
+                return ResponseEntity.ok("selected schedules is null");
             }
 
             List<Long> scheduleIds = scheduleList.stream()
