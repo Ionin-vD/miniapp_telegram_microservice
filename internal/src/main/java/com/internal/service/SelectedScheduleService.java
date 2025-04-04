@@ -1,5 +1,6 @@
 package com.internal.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,4 +36,9 @@ public class SelectedScheduleService {
     public List<SelectedSchedule> findByScheduleIdIn(List<Long> scheduleIds) {
         return selectedScheduleRepository.findByScheduleIdIn(scheduleIds);
     }
+
+    public List<SelectedSchedule> findAllByUserIdAndDateRange(Long userId, LocalDate startDate, LocalDate endDate) {
+        return selectedScheduleRepository.findAllByUserIdAndDateRange(userId, startDate, endDate);
+    }
+
 }

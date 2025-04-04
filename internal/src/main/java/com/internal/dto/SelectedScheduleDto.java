@@ -23,12 +23,18 @@ public class SelectedScheduleDto {
     private UserDto user;
     @JsonProperty("theme")
     private ThemeDto theme;
+    private Integer offset;
 
     public SelectedScheduleDto() {
     }
 
     public SelectedScheduleDto(Long scheduleId) {
         this.id = scheduleId;
+    }
+
+    public SelectedScheduleDto(Long id, Integer offset) {
+        this.id = id;
+        this.offset = offset;
     }
 
     public SelectedScheduleDto(Long scheduleId, Long userId, Long themeId, Long id, Long course_id, LocalDate date,

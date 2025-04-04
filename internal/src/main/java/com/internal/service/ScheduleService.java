@@ -72,4 +72,8 @@ public class ScheduleService {
         return scheduleRepository.findAvailableSchedulesInRange(monday, sunday);
     }
 
+    public List<Schedule> findByCourseIdAndDateBetween(Long courseId, LocalDate startDate, LocalDate endDate) {
+        return scheduleRepository.findByCourseIdAndDateBetween(courseId, startDate, endDate);
+    }
+
 }
