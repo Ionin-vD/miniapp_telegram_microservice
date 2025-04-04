@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,14 +29,50 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @PostMapping("/get_all_free_schedule_in_course")
-    public ResponseEntity<?> getAllFreeScheduleInCourse(@RequestBody ScheduleDto request) {
+    @PostMapping("/get_all_schedule_is_course")
+    public ResponseEntity<?> getSchedulesByCourse(@RequestBody ScheduleDto request) {
         try {
-            if (request.getCourse_id() == null) {
+            if (request.getCourse_id() == null || request.getOffset() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
             }
 
-            List<Schedule> schedules = scheduleService.findAvailableSchedulesByCourseId(request.getCourse_id());
+            int offset = request.getOffset() != null ? request.getOffset() : 0;
+
+            LocalDate monday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.MONDAY);
+            LocalDate sunday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.SUNDAY);
+
+            List<Schedule> schedules = scheduleService.findWeeklySchedule(request.getCourse_id(), monday, sunday);
+
+            if (schedules.isEmpty()) {
+                return ResponseEntity.ok("free schedules is null");
+            }
+
+            List<ScheduleDto> response = schedules.stream()
+                    .map(s -> new ScheduleDto(s.getId(), s.getCourseId(), s.getDate(), s.getTime()))
+                    .toList();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
+    @PostMapping("/get_all_free_schedule_in_course")
+    public ResponseEntity<?> getAllFreeScheduleInCourse(@RequestBody ScheduleDto request) {
+        try {
+            if (request.getCourse_id() == null || request.getOffset() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+
+            int offset = request.getOffset();
+            LocalDate monday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.MONDAY);
+            LocalDate sunday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.SUNDAY);
+
+            List<Schedule> schedules = scheduleService.findAvailableSchedulesByCourseIdInRange(request.getCourse_id(),
+                    monday, sunday);
+
             if (!schedules.isEmpty()) {
                 List<ScheduleDto> scheduleDtos = schedules.stream()
                         .map(schedule -> new ScheduleDto(
@@ -58,30 +93,65 @@ public class ScheduleController {
         }
     }
 
-    @PostMapping("/get_all_schedule_is_course")
-    public ResponseEntity<?> getSchedulesByCourse(@RequestBody ScheduleDto request) {
+    @PostMapping("/get_all_schedule")
+    public ResponseEntity<?> getAllSchedule(@RequestBody ScheduleDto request) {
         try {
-            if (request.getCourse_id() == null || request.getOffset() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            if (request.getOffset() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("offset null");
             }
 
-            int offset = request.getOffset() != null ? request.getOffset() : 0;
+            int offset = request.getOffset();
+            LocalDate monday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.MONDAY);
+            LocalDate sunday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.SUNDAY);
 
-            LocalDate baseDate = LocalDate.now().plusWeeks(offset);
-            LocalDate monday = baseDate.with(DayOfWeek.MONDAY);
-            LocalDate sunday = baseDate.with(DayOfWeek.SUNDAY);
+            List<Schedule> schedules = scheduleService.findAllInRange(monday, sunday);
 
-            List<Schedule> schedules = scheduleService.findWeeklySchedule(request.getCourse_id(), monday, sunday);
+            if (!schedules.isEmpty()) {
+                List<ScheduleDto> scheduleDtos = schedules.stream()
+                        .map(schedule -> new ScheduleDto(
+                                schedule.getId(),
+                                schedule.getCourseId(),
+                                schedule.getDate(),
+                                schedule.getTime()))
+                        .toList();
 
-            if (schedules.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("free schedules is null");
+                return ResponseEntity.ok(scheduleDtos);
+            } else {
+                return ResponseEntity.ok("schedule null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
+    @PostMapping("/get_all_free_schedule")
+    public ResponseEntity<?> getAllFreeSchedule(@RequestBody ScheduleDto request) {
+        try {
+            if (request.getOffset() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("offset null");
             }
 
-            List<ScheduleDto> response = schedules.stream()
-                    .map(s -> new ScheduleDto(s.getId(), s.getCourseId(), s.getDate(), s.getTime()))
-                    .toList();
+            int offset = request.getOffset();
+            LocalDate monday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.MONDAY);
+            LocalDate sunday = LocalDate.now().plusWeeks(offset).with(DayOfWeek.SUNDAY);
 
-            return ResponseEntity.ok(response);
+            List<Schedule> schedules = scheduleService.findAvailableSchedulesInRange(monday, sunday);
+
+            if (!schedules.isEmpty()) {
+                List<ScheduleDto> scheduleDtos = schedules.stream()
+                        .map(schedule -> new ScheduleDto(
+                                schedule.getId(),
+                                schedule.getCourseId(),
+                                schedule.getDate(),
+                                schedule.getTime()))
+                        .toList();
+
+                return ResponseEntity.ok(scheduleDtos);
+            } else {
+                return ResponseEntity.ok("schedule null");
+            }
         } catch (Exception e) {
             System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -198,54 +268,6 @@ public class ScheduleController {
         } catch (Exception e) {
             System.err.println("Ошибка при создании расписания: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
-        }
-    }
-
-    @GetMapping("/get_all_schedule")
-    public ResponseEntity<?> getAllSchedule() {
-        try {
-            List<Schedule> schedules = scheduleService.findAll();
-            if (!schedules.isEmpty()) {
-                List<ScheduleDto> scheduleDtos = schedules.stream()
-                        .map(schedule -> new ScheduleDto(
-                                schedule.getId(),
-                                schedule.getCourseId(),
-                                schedule.getDate(),
-                                schedule.getTime()))
-                        .toList();
-
-                return ResponseEntity.ok(scheduleDtos);
-            } else {
-                return ResponseEntity.ok("schedule null");
-            }
-        } catch (Exception e) {
-            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка сервера");
-        }
-    }
-
-    @GetMapping("/get_all_free_schedule")
-    public ResponseEntity<?> getAllFreeSchedule() {
-        try {
-            List<Schedule> schedules = scheduleService.findAvailableSchedules();
-            if (!schedules.isEmpty()) {
-                List<ScheduleDto> scheduleDtos = schedules.stream()
-                        .map(schedule -> new ScheduleDto(
-                                schedule.getId(),
-                                schedule.getCourseId(),
-                                schedule.getDate(),
-                                schedule.getTime()))
-                        .toList();
-
-                return ResponseEntity.ok(scheduleDtos);
-            } else {
-                return ResponseEntity.ok("schedule null");
-            }
-        } catch (Exception e) {
-            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка сервера");
         }
     }
 }

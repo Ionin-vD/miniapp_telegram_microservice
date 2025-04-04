@@ -60,4 +60,16 @@ public class ScheduleService {
         return scheduleRepository.findWeeklySchedule(courseId, startDate, endDate);
     }
 
+    public List<Schedule> findAvailableSchedulesByCourseIdInRange(Long course_id, LocalDate monday, LocalDate sunday) {
+        return scheduleRepository.findAvailableSchedulesByCourseIdInRange(course_id, monday, sunday);
+    }
+
+    public List<Schedule> findAllInRange(LocalDate monday, LocalDate sunday) {
+        return scheduleRepository.findAllInRange(monday, sunday);
+    }
+
+    public List<Schedule> findAvailableSchedulesInRange(LocalDate monday, LocalDate sunday) {
+        return scheduleRepository.findAvailableSchedulesInRange(monday, sunday);
+    }
+
 }
