@@ -142,10 +142,21 @@ spring:
             - Path=/api/mini_app/find_themes_title_by_ids
         #------------------------------------------------------------------------
 
+        - id: route-get_all_free_schedule_in_course
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/get_all_free_schedule_in_course
+
+        - id: route-delete_user_schedule
+          uri: ${URI_INTERNAL}
+          predicates:
+            - Path=/api/mini_app/delete_user_schedule
+
         - id: route-get_all_course_selected_schedule
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/get_all_course_selected_schedule
+
         - id: route-get_all_user_selected_schedule
           uri: ${URI_INTERNAL}
           predicates:
@@ -175,11 +186,6 @@ spring:
           uri: ${URI_INTERNAL}
           predicates:
             - Path=/api/mini_app/get_all_schedule_is_course
-
-        - id: route-delete_schedule
-          uri: ${URI_INTERNAL}
-          predicates:
-            - Path=/api/mini_app/delete_schedule
 
         - id: route-add_user_schedule
           uri: ${URI_INTERNAL}

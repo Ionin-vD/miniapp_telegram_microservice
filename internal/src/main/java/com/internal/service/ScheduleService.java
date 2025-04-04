@@ -51,4 +51,13 @@ public class ScheduleService {
     public Optional<Schedule> findById(Long id) {
         return scheduleRepository.findById(id);
     }
+
+    public List<Schedule> findAvailableSchedulesByCourseId(Long course_id) {
+        return scheduleRepository.findAllWhereNotSelectedByCourseId(course_id);
+    }
+
+    public List<Schedule> findWeeklySchedule(Long courseId, LocalDate startDate, LocalDate endDate) {
+        return scheduleRepository.findWeeklySchedule(courseId, startDate, endDate);
+    }
+
 }

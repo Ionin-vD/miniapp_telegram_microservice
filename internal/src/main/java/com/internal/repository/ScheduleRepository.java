@@ -7,12 +7,18 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.internal.model.Schedule;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query("SELECT s FROM Schedule s WHERE s.id NOT IN (SELECT ss.schedule.id FROM SelectedSchedule ss)")
     List<Schedule> findAllWhereNotSelected();
+
+    @Query("SELECT s FROM Schedule s WHERE s.courseId = :courseId AND s.date BETWEEN :startDate AND :endDate")
+    List<Schedule> findWeeklySchedule(@Param("courseId") Long courseId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     Optional<Schedule> findByCourseIdAndDateAndTime(Long course_id, LocalDate date, LocalTime time);
 
@@ -21,4 +27,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     boolean existsByCourseIdAndDateAndTime(Long courseId, LocalDate date, LocalTime time);
 
     List<Schedule> findByCourseId(Long course_id);
+
+    List<Schedule> findAllWhereNotSelectedByCourseId(Long course_id);
 }

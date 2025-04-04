@@ -1,5 +1,6 @@
 package com.internal.controller;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -8,8 +9,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.internal.dto.ScheduleDto;
+import com.internal.dto.ScheduleDtoList;
 import com.internal.dto.ScheduleRangeRequest;
 import com.internal.model.Schedule;
 import com.internal.service.ScheduleService;
@@ -30,34 +30,76 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
+    @PostMapping("/get_all_free_schedule_in_course")
+    public ResponseEntity<?> getAllFreeScheduleInCourse(@RequestBody ScheduleDto request) {
+        try {
+            if (request.getCourse_id() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+
+            List<Schedule> schedules = scheduleService.findAvailableSchedulesByCourseId(request.getCourse_id());
+            if (!schedules.isEmpty()) {
+                List<ScheduleDto> scheduleDtos = schedules.stream()
+                        .map(schedule -> new ScheduleDto(
+                                schedule.getId(),
+                                schedule.getCourseId(),
+                                schedule.getDate(),
+                                schedule.getTime()))
+                        .toList();
+
+                return ResponseEntity.ok(scheduleDtos);
+            } else {
+                return ResponseEntity.ok("schedule null");
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
     @PostMapping("/get_all_schedule_is_course")
     public ResponseEntity<?> getSchedulesByCourse(@RequestBody ScheduleDto request) {
-        if (request.getCourse_id() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+        try {
+            if (request.getCourse_id() == null || request.getOffset() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body null");
+            }
+
+            int offset = request.getOffset() != null ? request.getOffset() : 0;
+
+            LocalDate baseDate = LocalDate.now().plusWeeks(offset);
+            LocalDate monday = baseDate.with(DayOfWeek.MONDAY);
+            LocalDate sunday = baseDate.with(DayOfWeek.SUNDAY);
+
+            List<Schedule> schedules = scheduleService.findWeeklySchedule(request.getCourse_id(), monday, sunday);
+
+            if (schedules.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("free schedules is null");
+            }
+
+            List<ScheduleDto> response = schedules.stream()
+                    .map(s -> new ScheduleDto(s.getId(), s.getCourseId(), s.getDate(), s.getTime()))
+                    .toList();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Ошибка при получение всего расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
         }
-
-        List<Schedule> schedules = scheduleService.findByCourseId(request.getCourse_id());
-
-        if (schedules == null || schedules.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("free schedules is null");
-        }
-
-        List<ScheduleDto> response = schedules.stream()
-                .map(s -> new ScheduleDto(s.getId(), s.getCourseId(), s.getDate(), s.getTime()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/delete_schedule")
-    public ResponseEntity<?> deleteSchedule(@RequestBody ScheduleDto request) {
-        if (request.getId() == null) {
+    public ResponseEntity<?> deleteSchedule(@RequestBody ScheduleDtoList request) {
+        if (request == null || request.getIds() == null || request.getIds().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body is null");
         }
 
         try {
-            scheduleService.deleteById(request.getId());
-            return ResponseEntity.ok("Расписание удалено (вместе с выбранными слотами)");
+            for (Long id : request.getIds()) {
+                scheduleService.deleteById(id);
+            }
+            return ResponseEntity.ok("success");
         } catch (Exception e) {
             System.err.println("Ошибка при удалении расписания: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

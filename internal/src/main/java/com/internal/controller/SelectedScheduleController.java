@@ -34,6 +34,22 @@ public class SelectedScheduleController {
     @Autowired
     private WebClient webClient;
 
+    @PostMapping("/delete_user_schedule")
+    public ResponseEntity<?> deleteSelectedSchedule(@RequestBody SelectedScheduleDto request) {
+        try {
+            if (request.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body is null");
+            }
+
+            selectedScheduleService.deleteById(request.getId());
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            System.err.println("Ошибка при удалении пользователя из расписания: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сервера");
+        }
+    }
+
     @PostMapping("/get_all_course_selected_schedule")
     public ResponseEntity<?> getAllCourseSelectedSchedule(@RequestBody CourseIdRequest request) {
         try {
@@ -158,22 +174,6 @@ public class SelectedScheduleController {
             return ResponseEntity.ok(res);
         } catch (Exception e) {
             System.err.println("Ошибка при добавление пользователя в расписания: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка сервера");
-        }
-    }
-
-    @PostMapping("/delete_user_from_schedule")
-    public ResponseEntity<?> deleteUserFromSchedule(@RequestBody SelectedScheduleDto request) {
-        try {
-            if (request.getId() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("body is null");
-            }
-
-            selectedScheduleService.deleteById(request.getId());
-            return ResponseEntity.ok("Пользователь снят с расписания");
-        } catch (Exception e) {
-            System.err.println("Ошибка при удалении пользователя с расписания: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка сервера");
         }
